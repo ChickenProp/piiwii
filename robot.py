@@ -1,40 +1,36 @@
 #! /usr/bin/python
+from __future__ import division
+import math
 from config import Config
 import nunchuk
 import wiringpi
 
-def forward():
-    Config.motorL.forward()
-    Config.motorR.forward()
-
-def back():
-    Config.motorL.back()
-    Config.motorR.back()
-
-def stop():
-    Config.motorL.stop()
-    Config.motorR.stop()
+def motors(l, r):
+    Config.motorL.speed(l)
+    Config.motorR.speed(r)
 
 nunchuk.setup()
 
 try:
     while True:
         x,y = nunchuk.read_joy_normalized()
+        r = nunchuk.clamp(math.sqrt(x*x + y*y), -8, 8)
+        # It would perhaps be better if both motors were scaled by r when
+        # x != 0. But this gives results which feel good, so there's no
+        # particular need.
         if x == 0:
-            if y > 0:
-                forward()
-            elif y == 0:
-                stop()
-            else:
-                back()
-        elif y == 0:
-            if x > 0:
-                Config.motorL.speed(100)
-                Config.motorR.speed(-100)
-            else:
-                Config.motorL.speed(-100)
-                Config.motorR.speed(100)
+            motors(y*10, y*10)
+        elif x < 0:
+            if y >= 0:
+                motors((y-4)*20, r*10)
+            elif y < 0:
+                motors(-r*10, (y+4)*20)
+        elif x > 0:
+            if y >= 0:
+                motors(r*10, (y-4)*20)
+            elif y < 0:
+                motors((y+4)*20, -r*10)
 
-        wiringpi.delay(1000/60)
+        wiringpi.delay(int(1000/60))
 except KeyboardInterrupt:
-    stop()
+    motors(0, 0)
