@@ -17,12 +17,24 @@ def stop():
 
 nunchuk.setup()
 
-#Config.motorL.speed(50)
-#Config.motorR.speed(-25)
-
 try:
     while True:
-        print nunchuk.read_joy_normalized()
-        wiringpi.delay(500)
+        x,y = nunchuk.read_joy_normalized()
+        if x == 0:
+            if y > 0:
+                forward()
+            elif y == 0:
+                stop()
+            else:
+                back()
+        elif y == 0:
+            if x > 0:
+                Config.motorL.speed(100)
+                Config.motorR.speed(-100)
+            else:
+                Config.motorL.speed(-100)
+                Config.motorR.speed(100)
+
+        wiringpi.delay(1000/60)
 except KeyboardInterrupt:
     stop()
