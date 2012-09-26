@@ -19,5 +19,8 @@ nunchuk.setup()
 Config.motorL.speed(50)
 Config.motorR.speed(-25)
 
-while True:
-    print nunchuk.read_all()
+try:
+    while True:
+        1
+except KeyboardInterrupt:
+    stop()
