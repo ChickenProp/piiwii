@@ -6,19 +6,25 @@ class Motor:
         self.pinForward = pf
         self.pinBack = pb
 
-        gpio.pinMode(pf, gpio.OUTPUT)
-        gpio.digitalWrite(pf, False)
-        gpio.pinMode(pb, gpio.OUTPUT)
-        gpio.digitalWrite(pb, False)
+        wiringpi.softPwmCreate(pf, 0, 100)
+        wiringpi.softPwmCreate(pb, 0, 100)
 
     def forward(self):
-        gpio.digitalWrite(self.pinForward, 1)
-        gpio.digitalWrite(self.pinBack, 0)
+        wiringpi.softPwmWrite(self.pinForward, 100)
+        wiringpi.softPwmWrite(self.pinBack, 0)
 
     def back(self):
-        gpio.digitalWrite(self.pinForward, 0)
-        gpio.digitalWrite(self.pinBack, 1)
+        wiringpi.softPwmWrite(self.pinForward, 0)
+        wiringpi.softPwmWrite(self.pinBack, 100)
 
     def stop(self):
-        gpio.digitalWrite(self.pinForward, 0)
-        gpio.digitalWrite(self.pinBack, 0)
+        wiringpi.softPwmWrite(self.pinForward, 0)
+        wiringpi.softPwmWrite(self.pinBack, 0)
+
+    def speed(self, speed):
+        if (speed >= 0):
+            wiringpi.softPwmWrite(self.pinForward, speed)
+            wiringpi.softPwmWrite(self.pinBack, 0)
+        else:
+            wiringpi.softPwmWrite(self.pinForward, 0)
+            wiringpi.softPwmWrite(self.pinBack, -speed)
