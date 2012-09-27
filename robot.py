@@ -1,6 +1,7 @@
 #! /usr/bin/python
 from config import Config
 import nunchuk
+import wiringpi
 
 def forward():
     Config.motorL.forward()
@@ -16,11 +17,12 @@ def stop():
 
 nunchuk.setup()
 
-Config.motorL.speed(50)
-Config.motorR.speed(-25)
+#Config.motorL.speed(50)
+#Config.motorR.speed(-25)
 
 try:
     while True:
-        1
+        print nunchuk.read_joy_normalized()
+        wiringpi.delay(500)
 except KeyboardInterrupt:
     stop()
