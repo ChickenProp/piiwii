@@ -19,9 +19,9 @@ def read_all():
     os.write(i2c_fd, "\x00")
     wiringpi.delay(1)
     ret = bytearray(os.read(i2c_fd, 6))
-    acc_x = ret[2] << 2 + (ret[5] >> 2 & 0x03)
-    acc_y = ret[3] << 2 + (ret[5] >> 4 & 0x03)
-    acc_z = ret[4] << 2 + (ret[5] >> 6 & 0x03)
+    acc_x = (ret[2] << 2) + (ret[5] >> 2 & 0x03)
+    acc_y = (ret[3] << 2) + (ret[5] >> 4 & 0x03)
+    acc_z = (ret[4] << 2) + (ret[5] >> 6 & 0x03)
     btn_z = ret[5] & 0x01 == 0
     btn_c = ret[5] & 0x02 == 0
     return (ret[0], ret[1], acc_x, acc_y, acc_z, btn_z, btn_c)
