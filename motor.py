@@ -1,5 +1,5 @@
 import wiringpi
-gpio = wiringpi.GPIO(wiringpi.GPIO.WPI_MODE_GPIO)
+gpio = wiringpi.GPIO(wiringpi.GPIO.WPI_MODE_PINS)
 
 class Motor:
     def __init__(self, pf, pb):
